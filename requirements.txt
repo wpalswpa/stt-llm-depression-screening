@@ -1,0 +1,20 @@
+# Core
+pandas
+numpy
+torch
+
+# STT (Whisper)
+git+https://github.com/openai/whisper.git
+
+# Evaluation / utils
+jiwer
+tqdm
+
+# LLM classification (used in notebook)
+scikit-llm
+openai
+
+# Metrics / plots
+scikit-learn
+matplotlib
+seaborn

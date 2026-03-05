@@ -28,3 +28,8 @@ Whisper 기반 STT 전처리 및 LLM 기반 우울 위험 스크리닝(비임상
 ```bash
 pip install -r requirements.txt
 jupyter notebook
+
+## 6) 실험결과
+### Whisper-tiny: WER 0.5847 / CER 0.2542
+분류 성능(표): GPT-3.5 turbo Acc 0.5705 / F1 0.3687, GPT-4o Acc 0.5747 / F1 0.3120
+![results](assets/results.png)

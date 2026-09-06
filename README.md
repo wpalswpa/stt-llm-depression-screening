@@ -21,7 +21,8 @@ Whisper 기반 STT 전처리 및 LLM 기반 우울 위험 스크리닝(비임상
 
 ## 5) 실행 방법
 ### Option A) Colab(권장)
-- (추가 예정) Colab 링크를 연결하면 별도 환경 설치 없이 실행 가능합니다.
+- Colab에서 `파일 → 노트 열기 → GitHub` 탭에 이 저장소 주소를 넣으면 `LLM_우울증_조기진단_최종정리본.ipynb`를 바로 열 수 있습니다.
+- OpenAI API 키는 Colab Secrets(🔑)에 `OPENAI_API_KEY`로 등록하고, 음성 데이터는 AI Hub에서 직접 신청 후 업로드합니다.
 
 ### Option B) 로컬 실행
 ```bash

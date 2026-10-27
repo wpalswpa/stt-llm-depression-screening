@@ -2,6 +2,19 @@
 
 한국어 복지상담 음성을 Whisper로 전사하고 GPT 계열 모델의 zero-shot 분류를 비교한 연구입니다. 2025 한국통신학회 하계종합학술발표회 발표 이후 전사 처리와 평가 코드를 다시 점검했습니다. 의료 진단이나 임상 성능을 검증한 서비스는 아닙니다.
 
+## 내 역할과 발표 이후
+
+| 시기 | 한 일 |
+|---|---|
+| 학술대회 발표(2025-06) | 제1저자 · 발표자. Whisper 전사, Scikit-LLM zero-shot 분류(GPT-3.5-turbo · GPT-4o) 실험, 결과 정리와 원고 작성, 발표 |
+| 발표 이후 ① 재검증 정리(2026-08-28) | 발표 결과를 다시 읽는 절을 README에 더함([5a57b01](https://github.com/wpalswpa/stt-llm-depression-screening/commit/5a57b01)) |
+| 발표 이후 ② 평가 코드 수정(2026-09-16) | AI 코딩 도구와 평가 코드를 다시 점검하다 도구가 짚은 처리(빈 전사가 오류율 평균에서 빠짐, 정답 JSON의 첫 구간만 읽음)를 확인하고 고침, 원본 음성과 API 키 없이 도는 회귀 검사 추가([d877b98](https://github.com/wpalswpa/stt-llm-depression-screening/commit/d877b98)) |
+| 발표 이후 ③ 공개 정리(2026-09-20) | 로컬 자격 증명과 실행 파일이 저장소에 들어오지 않게 막음([30e473c](https://github.com/wpalswpa/stt-llm-depression-screening/commit/30e473c)) |
+
+![발표 결과 요약: Whisper tiny 전사 품질(WER · CER), GPT-3.5-turbo와 GPT-4o의 정확도 · 정밀도 · 재현율 · F1, 혼동행렬](assets/results.png)
+
+발표 결과 요약이다. GPT-4o는 정밀도 0.8169로 오탐이 적었지만 재현율 0.1928로 실제 우울을 더 많이 놓쳐, 조기 선별에는 낮은 재현율이 제한점이라고 정리했다. 위 그림은 발표 당시 수치이며 수정한 평가 코드로 다시 실행한 결과가 아니다.
+
 ## 문제와 접근
 
 음성 기반 분류에서는 전사 오류와 분류 오류가 섞입니다. 따라서 Whisper 전사의 WER·CER와 LLM의 정확도·우울 라벨 F1을 따로 확인합니다.

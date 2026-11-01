@@ -8,7 +8,7 @@
 |---|---|
 | 학술대회 발표(2025-06) | 제1저자 · 발표자. Whisper 전사, Scikit-LLM zero-shot 분류(GPT-3.5-turbo · GPT-4o) 실험, 결과 정리와 원고 작성, 발표 |
 | 발표 이후 ① 재검증 정리(2026-08-28) | 발표 결과를 다시 읽는 절을 README에 더함([5a57b01](https://github.com/wpalswpa/stt-llm-depression-screening/commit/5a57b01)) |
-| 발표 이후 ② 평가 코드 수정(2026-09-16) | AI 코딩 도구와 평가 코드를 다시 점검하다 도구가 짚은 처리(빈 전사가 오류율 평균에서 빠짐, 정답 JSON의 첫 구간만 읽음)를 확인하고 고침, 원본 음성과 API 키 없이 도는 회귀 검사 추가([d877b98](https://github.com/wpalswpa/stt-llm-depression-screening/commit/d877b98)) |
+| 발표 이후 ② 평가 코드 점검(2026-09-16) | AI 코딩 도구와 평가 코드를 다시 점검하다 도구가 짚은 처리(빈 전사가 오류율 평균에서 빠짐, 정답 JSON의 첫 구간만 읽음)를 내가 확인함. 수정과 원본 음성·API 키 없이 도는 회귀 검사 추가는 AI 코딩 도구가 함([d877b98](https://github.com/wpalswpa/stt-llm-depression-screening/commit/d877b98)) |
 | 발표 이후 ③ 공개 정리(2026-09-20) | 로컬 자격 증명과 실행 파일이 저장소에 들어오지 않게 막음([30e473c](https://github.com/wpalswpa/stt-llm-depression-screening/commit/30e473c)) |
 
 ![발표 결과 요약: Whisper tiny 전사 품질(WER · CER), GPT-3.5-turbo와 GPT-4o의 정확도 · 정밀도 · 재현율 · F1, 혼동행렬](assets/results.png)
@@ -62,7 +62,7 @@ CSV 필수 열은 `gt_text,pred_text`입니다. 두 열의 공백을 정규화�
 
 기존 보고: Whisper-tiny WER **0.5847**, CER **0.2542**; GPT-3.5-turbo 정확도 **0.5705**, 우울 라벨 F1 **0.3687**; GPT-4o 정확도 **0.5747**, F1 **0.3120**. 원본 데이터와 실행 로그가 공개 저장소에 없어 이 수치를 독립적으로 재현할 수 없습니다.
 
-2026-09-16 코드 점검에서 다음을 수정했습니다.
+2026-09-16 코드 점검에서 다음을 수정했습니다. 수정과 회귀 검사 작성은 AI 코딩 도구가 했고, 저는 빈 전사·첫 구간 처리가 결함인지 확인했습니다.
 
 - 빈 전사를 WER·CER에서 제외하던 조건을 수정했습니다. 이를 제외하면 실패가 평균에서 사라집니다.
 - 정답 JSON의 첫 `inputText`만 읽던 부분을 전체 세그먼트로 확장하고, 압축 해제·전사 입력 경로를 일치시켰습니다.

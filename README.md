@@ -10,6 +10,7 @@
 | 발표 이후 ① 재검증 정리(2026-08-28) | 발표 결과를 다시 읽는 절을 README에 더함([5a57b01](https://github.com/wpalswpa/stt-llm-depression-screening/commit/5a57b01)) |
 | 발표 이후 ② 평가 코드 점검(2026-09-16) | AI 코딩 도구와 평가 코드를 다시 점검하다 도구가 짚은 처리(빈 전사가 오류율 평균에서 빠짐, 정답 JSON의 첫 구간만 읽음)를 내가 확인함. 수정과 원본 음성·API 키 없이 도는 회귀 검사 추가는 AI 코딩 도구가 함([d877b98](https://github.com/wpalswpa/stt-llm-depression-screening/commit/d877b98)) |
 | 발표 이후 ③ 공개 정리(2026-09-20) | 로컬 자격 증명과 실행 파일이 저장소에 들어오지 않게 막음([30e473c](https://github.com/wpalswpa/stt-llm-depression-screening/commit/30e473c)) |
+| 발표 이후 ④ Whisper 크기 비교(2026-11-02) | 비교 없이 tiny를 썼던 판단을 공개 음성 비교로 되짚음. 노트북 작성과 실행은 AI 코딩 도구가 함([결과](#whisper-크기-비교)) |
 
 ![발표 결과 요약: Whisper tiny 전사 품질(WER · CER), GPT-3.5-turbo와 GPT-4o의 정확도 · 정밀도 · 재현율 · F1, 혼동행렬](assets/results.png)
 
@@ -42,6 +43,7 @@
 | [evaluation.py](evaluation.py) | 이미 생성한 CSV의 전사 오류율을 오프라인 재평가 |
 | [tests/test_evaluation.py](tests/test_evaluation.py) | 빈 전사·정답 누락·잘못된 입력의 회귀 검사 |
 | [과거 결과 표](assets/results.png) | 기존 보고 수치. 수정한 코드의 재실행 결과가 아님 |
+| [크기 비교 노트북](followup/whisper_size_comparison.ipynb) · [요약표](followup/summary.csv) | 공개 한국어 음성으로 tiny·small·large-v3 비교 |
 
 ## 실행
 
@@ -72,4 +74,20 @@ CSV 필수 열은 `gt_text,pred_text`입니다. 두 열의 공백을 정규화�
 
 **수정 후 음성 재전사와 LLM 재평가는 아직 수행하지 않았습니다.** 기존 수치는 역사적 보고치이며 수정된 파이프라인의 성능으로 인용하지 않습니다. 전사 오류가 분류 저하의 원인이라는 설명 역시 정답 전사/모델 전사를 동일 조건으로 비교하기 전에는 가설입니다.
 
-추가 확인: 파일 이름을 `speaker_id`로 사용한 기존 집계가 실제 화자 단위와 일치하는지, JSON 세그먼트 순서가 시간순인지 원본 메타데이터로 확인해야 합니다. 상위 Whisper 모델과의 비교 및 LLM 모델·프롬프트·라이브러리 버전 고정은 후속 실험 범위입니다.
+추가 확인: 파일 이름을 `speaker_id`로 사용한 기존 집계가 실제 화자 단위와 일치하는지, JSON 세그먼트 순서가 시간순인지 원본 메타데이터로 확인해야 합니다. 상담 음성에서의 상위 Whisper 모델 비교와 LLM 모델·프롬프트·라이브러리 버전 고정은 후속 실험 범위입니다.
+
+## Whisper 크기 비교
+
+발표에서는 작은 모델로도 의미 있는 결과가 나올 것으로 보고 tiny를 썼고, 다른 크기와 비교하지 않았습니다. 그 판단을 되짚기 위해 공개 데이터 [Zeroth-Korean](https://huggingface.co/datasets/Bingsu/zeroth-korean)(CC BY 4.0) 시험 분할 457문장, 음성 71.5분을 연구와 같은 조건(`openai-whisper`, `language="ko"`, 나머지 기본값)으로 전사하고 [evaluation.py](evaluation.py)로 쟀습니다.
+
+| 모델 | WER | 구두점을 뺀 WER | 구두점·공백을 뺀 CER | 실시간 대비 처리 속도 |
+|---|---|---|---|---|
+| tiny | 0.592 | 0.551 | 0.256 | 48.1배 |
+| small | 0.389 | 0.323 | 0.103 | 10.3배 |
+| large-v3 | 0.316 | 0.265 | 0.095 | 0.86배 |
+
+이 데이터에서는 small의 효율이 가장 좋았습니다. tiny에서 small로 가면 처리 시간이 약 5배 늘고 WER이 0.20 줄었고, small에서 large-v3로 가면 처리 시간이 약 12배 늘고 WER이 0.07 줄었습니다.
+
+평가 코드는 구두점을 그대로 세므로 표기 차이의 영향도 쟀습니다. 저장된 연구 전사 4,999건의 WER은 구두점을 빼면 0.5503에서 0.4843으로 내려가고, CER은 0.2507에서 0.2409로 거의 그대로입니다. 영향은 있지만 대부분은 실제 전사 오류입니다. 원본은 이용 조건 때문에 공개하지 않아 이 값은 독립적으로 재현할 수 없습니다.
+
+위 표는 낭독 음성을 Apple M5 CPU에서 전사한 결과입니다. 상담 음성의 오류율, 분류 성능에 미치는 영향, GPU 처리 속도는 재지 않았습니다.
